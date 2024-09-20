@@ -6,10 +6,6 @@
 
 using namespace std;
 
-string encode;
-// K ccpkbgu fdp hq tyavinrrt mvg rkdnbv fd etdgi ltxrgu ddk o tfmb pvge G ltg ck qracqc. Wdn awcrxiza kft lewrpt ycqkyvx ch kft poncq qr hjv ajuwe tmcmspkq dy hjv dahct rls vskcgcz qqdzxgsf rls wcwsjt bh. Afs iasp rjahk jrju mvg kmitz hfp dispzlvl gwtf pl kkebdpg ceb shctj. Rwxb afs pezqn rwx cvycg aonw ddk ackawbbi kft iovkcgg. Hjvl nhi ffsqes vyc lacnv rwbbi repbb vf exos c dygzwp fd tkfqi. Ycw hjvl nhi qibtk hjv npist.
-// S lotabgy kqmasbaew qy n eizuwuggakgy kknrem lbj dkeanevfo zuw iagzmtgakogq wl qaoogst srkagtwa ue vwihemtgk. I bndqj qaoogst yvyvggmzk bf i srkagtw ooiwa g ewkocamtg uwtsalkaum zusb zuw ukfkimr uisr xzuz s akavmx xfwca lw zuw zkpaxorfb.  Jvyqznd aotfizhjmy njm g flitqszj rdmsrfb us ewyg uzeclwmesxnvu xxblwibd aavlmy, nfl gew kuzewtyq cyrv nue kwlgoixr vqygjqhhlqua, xqtnfkond bxnfagplquak, kualzgpl ugasokzwvz fgnzjszk, nfl oa gbnrj kgfwa cuwzk vl qy vexuelitg lw jrlmig xwxtwze bj bgzhmxvfo.
-
 float alphaRate[26] = {
     0.082, 0.015, 0.028, 0.043, 0.127,
     0.022, 0.020, 0.061, 0.070, 0.002,
@@ -94,13 +90,16 @@ string decryptVigenere(string ciphertext, string key) {
 }
 
 int main() {
-    getline(cin, encode);
+    string encode = "";
+    string sub_str;
+    while(getline(cin, sub_str)){
+        encode += sub_str;
+    }
 
-    string res_text = "";
     string res_key = "";
     float res_score = 1e9;
 
-    for(int keyLength = 1;keyLength <= 10;keyLength ++){
+    for(int keyLength = 1;keyLength <= (int)encode.size() / 50;keyLength ++){
         vector<vector<char>> split_text = splitText(encode, keyLength);
         
         string key = "";
@@ -112,16 +111,15 @@ int main() {
             key += (char)(bestShift + 'A');
         }
         
-        string decryptedText = decryptVigenere(encode, key);
+        decryptedScore /= keyLength;
         if(decryptedScore < res_score){
             res_score = decryptedScore;
-            res_text = decryptedText;
             res_key = key;
         }
     }
 
     cout << res_key << endl;
-    cout << res_text << endl;
+    cout << decryptVigenere(encode, res_key) << endl;
     
     return 0;
 }
