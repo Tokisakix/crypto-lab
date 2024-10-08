@@ -14,8 +14,11 @@ float alphaRate[26] = {
     0.028, 0.010, 0.023, 0.001, 0.020,
     0.001, 
 };
+string encode;
+float freq[26] = {};
+float decryptedScore = 0.0;
 
-vector<vector<char>> splitText(string encode, int length) {
+vector<vector<char>> splitText(string& encode, int length) {
     vector<vector<char>> res(length);
     int idx = 0;
     for (char ch : encode) {
@@ -27,30 +30,20 @@ vector<vector<char>> splitText(string encode, int length) {
     return res;
 }
 
-vector<float> calFreq(vector<char> text) {
-    vector<float> freq(26, 0.0);
-    float tot = 0.0;
+void calFreq(vector<char>& text) {
+    float tot = text.size();
     for (char ch : text) {
         if (isalpha(ch)) {
             freq[toupper(ch) - 'A'] += 1.0;
-            tot += 1.0;
         }
     }
     for (int i = 0; i < 26; i++) {
         freq[i] /= tot;
     }
-    return freq;
+    return;
 }
 
-float calcChiSquare(vector<float> freq) {
-    float chiSquare = 0.0;
-    for (int i = 0; i < 26; i++) {
-        chiSquare += pow(freq[i] - alphaRate[i], 2) / alphaRate[i];
-    }
-    return chiSquare;
-}
-
-tuple<int, float> findBestShift(vector<char> text) {
+int findBestShift(vector<char>& text) {
     float minChiSquare = 1e9;
     int bestShift = 0;
 
@@ -60,8 +53,12 @@ tuple<int, float> findBestShift(vector<char> text) {
             ch = (toupper(ch) - 'A' - shift + 26) % 26 + 'A';
         }
 
-        vector<float> freq = calFreq(shiftedText);
-        float chiSquare = calcChiSquare(freq);
+        calFreq(shiftedText);
+        float chiSquare = 0.0;
+        for (int i = 0; i < 26; i++) {
+            float temp = freq[i] - alphaRate[i];
+            chiSquare += (temp * temp) / alphaRate[i];
+        }
         
         if (chiSquare < minChiSquare) {
             minChiSquare = chiSquare;
@@ -69,45 +66,45 @@ tuple<int, float> findBestShift(vector<char> text) {
         }
     }
 
-    tuple<int, float> res(bestShift, minChiSquare);
+    decryptedScore += minChiSquare;
     
-    return res;
+    return bestShift;
 }
 
-string decryptVigenere(string ciphertext, string key) {
-    string plaintext = ciphertext;
+void decryptVigenere(string& ciphertext, string& key) {
     int keyLen = key.length();
     
     for (int i = 0, j = 0; i < (int)ciphertext.length(); i++) {
         if (isalpha(ciphertext[i])) {
             char base = isupper(ciphertext[i]) ? 'A' : 'a';
-            plaintext[i] = (ciphertext[i] - base - (toupper(key[j % keyLen]) - 'A') + 26) % 26 + base;
+            ciphertext[i] = (ciphertext[i] - base - (toupper(key[j % keyLen]) - 'A') + 26) % 26 + base;
             j++;
         }
+        printf("%c", ciphertext[i]);
     }
     
-    return plaintext;
+    return;
 }
 
 int main() {
-    string encode = "";
+    encode = "";
     string sub_str;
     while(getline(cin, sub_str)){
+        sub_str += "\n";
         encode += sub_str;
     }
 
     string res_key = "";
     float res_score = 1e9;
+    int key_max_length = encode.size() / 50;
 
-    for(int keyLength = 1;keyLength <= (int)encode.size() / 50;keyLength ++){
+    for(int keyLength = 4;keyLength <= key_max_length;keyLength ++){
         vector<vector<char>> split_text = splitText(encode, keyLength);
+        decryptedScore = 0.0;
         
         string key = "";
-        float decryptedScore = 0.0;
         for (int i = 0; i < keyLength; i++) {
-            tuple<int, float> bestres = findBestShift(split_text[i]);
-            int bestShift = get<0>(bestres);
-            decryptedScore += get<1>(bestres);
+            int bestShift = findBestShift(split_text[i]);
             key += (char)(bestShift + 'A');
         }
         
@@ -119,7 +116,7 @@ int main() {
     }
 
     cout << res_key << endl;
-    cout << decryptVigenere(encode, res_key) << endl;
+    decryptVigenere(encode, res_key);
     
     return 0;
 }
