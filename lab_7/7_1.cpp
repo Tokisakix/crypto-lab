@@ -350,10 +350,11 @@ int main() {
     P.a[0] = (P.a[1] << 63) | (P.a[0] >> 1);
     P.a[1] = P.a[1] >> 1;
 
+    uint8_t result[1024];
     for (uint32_t i = 0; i < len; ++i) {
-        uint8_t res = run();
-        fwrite( & res, sizeof(uint8_t), 1, stdout);
+        result[i] = run();
     }
+    fwrite( & result, sizeof(uint8_t), len, stdout);
 
     fwrite( & num_0, sizeof(uint32_t), 1, stdout);
     fwrite( & num_1, sizeof(uint32_t), 1, stdout);
