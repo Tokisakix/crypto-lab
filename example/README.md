@@ -36,3 +36,22 @@ python main.py --type des
 ```bash
 cd example
 python main.py --type aes
+```
+
+## MD5 加密
+
+代码实现位于 [md5.py](impl/md5.py)
+
+```bash
+cd example
+python main.py --type md5
+```
+
+## SHA-1 加密
+
+代码实现位于 [sha1.py](impl/sha1.py)
+
+```bash
+cd example
+python main.py --type sha1
+```

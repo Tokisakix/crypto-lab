@@ -13,6 +13,8 @@ from impl import (
     encode_hill, decode_hill,
     encode_des,
     encode_aes,
+    encode_md5,
+    encode_sha1,
 )
 
 DEFAULT = lambda message: "Not impl yet."
@@ -38,6 +40,12 @@ def run(type:str, message:str) -> Tuple[str, str]:
             [0x16, 0xA6, 0x88, 0x3C]
         ]
         encode = encode_aes(message, key)
+        decode = DEFAULT(encode)
+    elif type == "md5":
+        encode = encode_md5(message)
+        decode = DEFAULT(encode)
+    elif type == "sha1":
+        encode = encode_sha1(message)
         decode = DEFAULT(encode)
     else:
         encode = DEFAULT(message)
