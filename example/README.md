@@ -1,6 +1,6 @@
 # Crypto Lab Example
 
-`example` 文件夹存放了中山大学 2024 年《现代密码学》的所有教材算法的 Python 实现
+`example` 文件夹则存放了中山大学 2024 年《现代密码学》重要算法的 Python 实现，仅供参考
 
 ## 维吉尼亚密码
 
