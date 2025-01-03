@@ -55,3 +55,21 @@ python main.py --type md5
 cd example
 python main.py --type sha1
 ```
+
+## RSA
+
+代码实现位于 [rsa.py](impl/rsa.py)
+
+```bash
+cd example
+python main.py --type rsa
+```
+
+## ElGamal
+
+代码实现位于 [elgamal.py](impl/elgamal.py)
+
+```bash
+cd example
+python main.py --type elgamal
+```

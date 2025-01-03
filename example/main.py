@@ -1,4 +1,5 @@
 # Std lib
+import random
 import time
 import argparse
 from typing import Tuple
@@ -15,6 +16,8 @@ from impl import (
     encode_aes,
     encode_md5,
     encode_sha1,
+    encode_rsa, decode_rsa, modinv,
+    encode_elgamal, decode_elgamal, find_generator,
 )
 
 DEFAULT = lambda message: "Not impl yet."
@@ -47,6 +50,22 @@ def run(type:str, message:str) -> Tuple[str, str]:
     elif type == "sha1":
         encode = encode_sha1(message)
         decode = DEFAULT(encode)
+    elif type == "rsa":
+        p = 61
+        q = 53
+        n = p * q
+        phi = (p - 1) * (q - 1)
+        e = 17
+        d = modinv(e, phi)
+        encode = encode_rsa(message, e, n)
+        decode = decode_rsa(encode, d, n)
+    elif type == "elgamal":
+        p = 100000007
+        g = find_generator(p)
+        x = random.randint(2, p - 2)
+        y = pow(g, x, p)
+        encode = encode_elgamal(message, p, g, y)
+        decode = decode_elgamal(encode, p, x)
     else:
         encode = DEFAULT(message)
         decode = DEFAULT(encode)
