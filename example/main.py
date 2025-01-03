@@ -11,19 +11,34 @@ from utils import loadMessage, showInfo
 from impl import (
     encode_vigenere, decode_vigenere,
     encode_hill, decode_hill,
+    encode_des,
+    encode_aes,
 )
 
 DEFAULT = lambda message: "Not impl yet."
 
 def run(type:str, message:str) -> Tuple[str, str]:
     if type == "vigenere":
-        key = "vigenereExampleKey"
+        key = "key"
         encode = encode_vigenere(message, key)
         decode = decode_vigenere(encode, key)
-    if type == "hill":
+    elif type == "hill":
         key = np.array([[3, 5], [1, 10]])
         encode = encode_hill(message, key)
         decode = decode_hill(encode, key)
+    elif type == "des":
+        key = "DesKey00"
+        encode = encode_des(message, key)
+        decode = DEFAULT(encode)
+    elif type == "aes":
+        key = [
+            [0x2B, 0x28, 0xAB, 0x09],
+            [0x7E, 0xAE, 0xF7, 0xCF],
+            [0x15, 0xD2, 0x15, 0x4F],
+            [0x16, 0xA6, 0x88, 0x3C]
+        ]
+        encode = encode_aes(message, key)
+        decode = DEFAULT(encode)
     else:
         encode = DEFAULT(message)
         decode = DEFAULT(encode)
@@ -45,6 +60,6 @@ if __name__ == "__main__":
     endTime = time.perf_counter()
     totalTime = endTime - startTime
 
-    # sHOW Log
+    # Show Log
     showInfo(args.type, totalTime, MESSAGE, ENCODE, DECODE)
     exit(0)

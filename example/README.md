@@ -19,3 +19,20 @@ python main.py --type vigenere
 cd example
 python main.py --type hill
 ```
+
+## DES 加密
+
+代码实现位于 [des.py](impl/des.py)
+
+```bash
+cd example
+python main.py --type des
+```
+
+## AES 加密
+
+代码实现位于 [aes.py](impl/aes.py)
+
+```bash
+cd example
+python main.py --type aes
